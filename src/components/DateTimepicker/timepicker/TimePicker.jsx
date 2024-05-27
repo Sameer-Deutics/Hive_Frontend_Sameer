@@ -2,6 +2,7 @@ import { useState } from "react";
 import moment from "moment";
 import { FaChevronUp, FaChevronDown } from "react-icons/fa";
 import styled from "styled-components";
+import TimeHeader from "./TimeHeader";
 
 const TimePicker = ({ onSelectTime, onAdd }) => {
   const [currentTime, setCurrentTime] = useState(moment());
@@ -34,10 +35,7 @@ const TimePicker = ({ onSelectTime, onAdd }) => {
   return (
     <div>
       <Container>
-        <FormattedTime>
-          <h6>Time</h6>
-          <h1>{currentTime.format("hh:mm A")}</h1>
-        </FormattedTime>
+        <TimeHeader currentTime={currentTime} />
       </Container>
 
       {/* time side */}
@@ -90,33 +88,6 @@ const Container = styled.div`
   border-width: 1px;
   width: 100%;
   position: relative;
-`;
-
-const FormattedTime = styled.div`
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  height: 3.5rem /* 56px */;
-  justify-content: center;
-  width: 8rem /* 128px */;
-
-  h6 {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-top: 1.25rem /* 20px */;
-    width: 8rem /* 128px */;
-    font-size: 0.875rem /* 14px */;
-    line-height: 1.25rem /* 20px */;
-  }
-  h1 {
-    display: flex;
-    align-items: center;
-    font-size: 0.875rem /* 14px */;
-    line-height: 1.25rem /* 20px */;
-    justify-content: center;
-    width: 8rem /* 128px */;
-  }
 `;
 
 const TimeSideContainer = styled.div`

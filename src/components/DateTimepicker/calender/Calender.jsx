@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import dayjs from "dayjs";
-import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import styled, { css } from "styled-components";
+import CalenderHeader from "./CalenderHeader";
 
 // Utility functions to generate dates and get month names
 const generateDate = (month, year) => {
@@ -70,6 +70,7 @@ const YearSelector = ({ selectedYear, onSelectYear }) => {
     <select
       value={selectedYear}
       onChange={(e) => onSelectYear(parseInt(e.target.value))}
+      className="bg-gray-300 border-none focus:border-none"
     >
       {years.map((year) => (
         <option key={year} value={year}>
@@ -82,7 +83,7 @@ const YearSelector = ({ selectedYear, onSelectYear }) => {
 
 // const cn = (...classes) => classes.filter(Boolean).join(" ");
 
-const MyCalendar = ({ onSelectDate }) => {
+const Calendar = ({ onSelectDate }) => {
   const days = ["S", "M", "T", "W", "T", "F", "S"];
 
   const [currentTime, setCurrentTime] = useState(dayjs().format("HH:mm"));
@@ -135,38 +136,17 @@ const MyCalendar = ({ onSelectDate }) => {
   return (
     <CalenderWrapper>
       <div className="">
-        <RelativeDiv>
-          <DivFlex>
-            <DivDate>
-              <h6>Date</h6>
-            </DivDate>
-
-            <DivForDayYear>
-              <h4>
-                {month} {day} ,{/* , {year} */}
-                <YearSelector
-                  selectedYear={selectedYear}
-                  onSelectYear={handleYearSelect}
-                  style={{ backgroundColor: "gray" }}
-                />
-              </h4>
-
-              <DivForIcons>
-                <IconButton onClick={handlePreviousMonth}>
-                  <GrFormPrevious />
-                </IconButton>
-                <IconButton onClick={handleNextMonth}>
-                  <GrFormNext />
-                </IconButton>
-
-                {/*  */}
-              </DivForIcons>
-              {/*  */}
-
-              {/*  */}
-            </DivForDayYear>
-          </DivFlex>
-        </RelativeDiv>
+        {/* calender header */}
+        <CalenderHeader
+          handleNextMonth={handleNextMonth}
+          handlePreviousMonth={handlePreviousMonth}
+          handleYearSelect={handleYearSelect}
+          selectedYear={selectedYear}
+          YearSelector={YearSelector}
+          month={month}
+          day={day}
+          year={year}
+        />
 
         {/*  */}
         <DivForDays>
@@ -207,90 +187,13 @@ const MyCalendar = ({ onSelectDate }) => {
   );
 };
 
-export default MyCalendar;
+export default Calendar;
 
 const CalenderWrapper = styled.div`
   height: 100%;
   width: 100%;
   align-items: center;
   border-style: none;
-`;
-
-// border-top-right-radius: 0.5rem /* 8px */;
-const RelativeDiv = styled.div`
-  position: relative;
-  --tw-bg-opacity: 1;
-  background-color: rgb(209 213 219 / var(--tw-bg-opacity));
-  border-top-left-radius: 0.5rem /* 8px */;
-`;
-
-const DivFlex = styled.div`
-  display: flex;
-  height: 10vh;
-  width: 100%;
-  @media (min-width: 1024px) {
-    width: 25vw;
-    justify-content: flex-start;
-  }
-  flex-direction: column;
-  @media (min-width: 768px) {
-    align-items: flex-start;
-    justify-content: center;
-  }
-  @media (min-width: 640px) {
-    align-items: center;
-    justify-content: flex-start;
-  }
-`;
-
-const DivDate = styled.div`
-  width: 8rem /* 128px */;
-  font-size: 0.75rem /* 12px */;
-  line-height: 1rem /* 16px */;
-  @media (min-width: 640px) {
-    font-size: 0.875rem /* 14px */;
-    line-height: 1.25rem /* 20px */;
-  }
-  @media (min-width: 768px) {
-    font-size: 0.875rem /* 14px */;
-    line-height: 1.25rem /* 20px */;
-  }
-  margin-top: 0.75rem /* 12px */;
-  margin-left: 0.5rem /* 8px */;
-`;
-
-const DivForDayYear = styled.div`
-  display: flex;
-  width: 100%;
-  @media (min-width: 1024px) {
-    width: 25vw;
-  }
-  @media (min-width: 1024px) {
-    justify-content: space-between;
-  }
-  align-items: center;
-  @media (min-width: 640px) {
-    align-items: center;
-  }
-  margin-left: 0.5rem /* 8px */;
-
-  h4 {
-    font-size: 0.875rem /* 14px */;
-    line-height: 1.25rem /* 20px */;
-    font-weight: 600;
-  }
-`;
-
-const DivForIcons = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.75rem /* 12px */;
-`;
-
-const IconButton = styled.div`
-  width: 1.25rem; /* Equivalent to 'w-5' */
-  height: 1.25rem; /* Equivalent to 'h-5' */
-  cursor: pointer;
 `;
 
 const DivForDays = styled.div`
