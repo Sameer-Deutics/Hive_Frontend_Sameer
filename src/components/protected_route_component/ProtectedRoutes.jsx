@@ -7,8 +7,7 @@ const ProtectedRoutes = ({
   conditions,
   profileRequired = true,
   roleBasedRouting = true,
-  Component
-
+  Component,
 }) => {
   const context = useContext(ContextAuthenticator);
   const { profile, isFetching } = context;

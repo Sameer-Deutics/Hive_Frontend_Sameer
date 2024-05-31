@@ -1,9 +1,4 @@
-// import DashboardBtnInputs from "./DashboardBtnInputs"
-import { useState } from "react";
-import Select from "react-select";
-
 const Students = () => {
-  //
   const people = [
     {
       name: "Lindsay Walton",
@@ -13,23 +8,22 @@ const Students = () => {
     },
     // More people...
   ];
+
   return (
     <div>
       {/* <DashboardBtnInputs/> */}
       <form className=" ">
-        <select className="bg-[#08A5DE] text-white mt-5 px-3  p-1  text-sm rounded-2xl  lg:w-[70vw] md:w-[60vw] sm:w-[90vw] w-[90vw]   ">
+        <select className="bg-[#08A5DE] text-white mt-5 px-3 p-1 text-sm rounded-2xl lg:w-[70vw] md:w-[60vw] sm:w-[90vw] w-[90vw]">
           <option value="1" className="p-5">
             2021 - 2022
           </option>
-          <hr />
           <option value="2">2022 - 2024</option>
-          <hr />
           <option value="3">2024 - 2026</option>
         </select>
       </form>
 
       {/* inputs */}
-      <div className="lg:w-[70vw] md:w-[60vw] sm:w-[90vw] w-[90vw]   p-1 ">
+      <div className="lg:w-[70vw] md:w-[60vw] sm:w-[90vw] w-[90vw] p-1">
         <div className="mt-8 flow-root">
           <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">

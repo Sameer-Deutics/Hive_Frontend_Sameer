@@ -153,23 +153,3 @@ const TimePickerContainer = styled.div`
     display: block;
   }
 `;
-
-// const handleFormatChange = (event) => {
-//     setSelectedFormat(event.target.value);
-//   };
-
-{
-  /* <div>
-        <h1>Select your time format</h1>
-        <select
-          value={selectedFormat}
-          onChange={handleFormatChange}
-          className="px-4 py-2  rounded focus:outline-none focus:border-blue-500 cursor-pointer mt-1"
-        >
-          <option value="YYYY-MM-DD HH:mm">Year-Month-Date Hour-minutes</option>
-          <option value="DD-MM-YYYY HH:mm">Day-Month-Year Hour-minutes</option>
-          <option value="MM-DD-YYYY HH:mm">Month-Day-Year Hour-minutes</option>
-          <option value="HH:mm">Hour-minutes</option>
-        </select>
-      </div> */
-}

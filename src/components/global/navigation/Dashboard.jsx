@@ -1,7 +1,6 @@
 import { Fragment, useState, useEffect } from "react";
 import { Dialog, Menu, Transition } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import { Bars3Icon } from "@heroicons/react/24/outline";
 import Hive from "../../../assets/Hive.svg";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -38,48 +37,25 @@ export default function Dashboard({ userRole }) {
   const dispatch = useDispatch();
 
   const userdata = useSelector((state) => state.user);
-  console.log(userdata.user.email);
 
   // On component mount, check if there's a selected item in localStorage
   useEffect(() => {
-    const storedItem = localStorage.getItem("selectedItem");
+    const storedItem = sessionStorage.getItem("selectedItem");
     if (storedItem) {
       setSelectedItem(storedItem);
-    } else if (data.length > 0) {
-      // Set to first item if no item in localStorage
-      setSelectedItem(data[0].link);
+    } else if (dataSide.length > 0) {
+      setSelectedItem(dataSide[0].link);
     }
-  }, [data]);
+  }, []);
 
   // On selectedItem change, update localStorage
   useEffect(() => {
-    localStorage.setItem("selectedItem", selectedItem);
+    sessionStorage.setItem("selectedItem", selectedItem) || 0;
   }, [selectedItem]);
 
   const navigate = useNavigate();
-  // let user=useSelector((state)=>state.users.user)
-  // console.log(user,"state user");
-
-  //   useEffect(() => {
-  //    const roles=localStorage.getItem("account_type")
-  //    setUserRoles(roles)
-  //    console.log(roles,"roles");
-
-  //    const users = localStorage.getItem('user-name');
-  //   // Check if the user exists
-  // if (user !== null) {
-  //   // Item exists, do something with it
-  //   console.log('Retrieved user:', user);
-  //   setUserName(user)
-  //   console.log(userName,"user Name set user");
-  // } else {
-  //   // Item doesn't exist
-  //   console.log('Item not found');
-  // }
-  //   }, [])
 
   const LogoutUser = () => {
-    // user=null;
     localStorage.removeItem("account_type");
     localStorage.removeItem("access_token");
     localStorage.removeItem("user-name");
@@ -132,7 +108,7 @@ export default function Dashboard({ userRole }) {
 
   return (
     <>
-      <div className="grid lg:gird-cols-2 bg-[#F9F9F9] ">
+      <div className="grid lg:gird-cols-2  ">
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog className="relative z-50 lg:hidden" onClose={setSidebarOpen}>
             <Transition.Child
@@ -168,12 +144,7 @@ export default function Dashboard({ userRole }) {
                     leaveTo="opacity-0"
                   >
                     {/* flag */}
-                    <div className="absolute left-full top-0 flex w-16 justify-center pt-5">
-                      {/* <button type="button" className="-m-2.5 p-2.5" onClick={()=> setSidebarOpen(false)}>
-                        <span className="sr-only">Close sidebar</span>
-                        <XMarkIcon className="h-6 w-6 text-white" aria-hidden="true" />
-                      </button> */}
-                    </div>
+                    <div className="absolute left-full top-0 flex w-16 justify-center pt-5"></div>
                   </Transition.Child>
                   {/* Sidebar component, swap this element with another sidebar if you like */}
                   <div className="flex grow flex-col bg-white gap-y-5 overflow-y-auto  pb-4 ring-1 ring-white/10">
@@ -262,7 +233,7 @@ export default function Dashboard({ userRole }) {
           {/*  */}
           {/*  */}
           <div className="hidden  md:inset-y-0 lg:w-[30vw] h-full md:z-50 md:flex md:w-80 md:flex-col lg:z-50 lg:flex md:w-96 md:h-[100vh] lg:flex-col ">
-            <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-[#F9F9F9] px-6 pb-4 ">
+            <div className="flex grow flex-col gap-y-5 overflow-y-auto  px-6 pb-4 ">
               <div className="flex h-16 shrink-0  ">
                 <img
                   className="h-16 w-auto  mt-2 "
@@ -270,13 +241,13 @@ export default function Dashboard({ userRole }) {
                   alt="Your Company"
                 />
               </div>
-              <nav className="flex flex-1 flex-col h-full ">
+              <nav className="flex flex-1 flex-col h-full">
                 <ul
                   role="list"
-                  className="flex flex-1 flex-col  gap-y-7 pt-4  rounded-l-lg bg-gradient-to-r from-[#08A5DE] to-[#00739C] h-full"
+                  className="flex flex-1 flex-col gap-y-7 pt-4 rounded-l-lg bg-gradient-to-r from-[#08A5DE] to-[#00739C] h-full"
                 >
-                  <li className="flex justify-start ">
-                    <ul role="list" className="-mx-2 space-y-1 ">
+                  <li className="flex justify-start">
+                    <ul role="list" className="-mx-2 space-y-1">
                       {dataSide?.map((item) => (
                         <li
                           key={item.id}
@@ -284,36 +255,34 @@ export default function Dashboard({ userRole }) {
                         >
                           <Link to={`${item.link}`}>
                             <div
-                              className={` flex gap-2  ${
+                              className={`flex gap-2 ${
                                 selectedItem === item.link
                                   ? "sidecolor"
-                                  : "border-l-[4px] border-[#08A5DE] "
-                              } `}
+                                  : "border-l-[4px] border-[#08A5DE]"
+                              }`}
                               onClick={() => handleItemClick(item.link)}
                             >
                               <div className="h-[24px] w-[24px] text-black md:pl-6 lg:pl-4">
                                 {item.logo}
                               </div>
-                              <h4 className="lg:text-lg md:text-md sm:text-sm text-sm  text-white md:pl-5 lg:pl-3">
+                              <h4 className="lg:text-lg md:text-md sm:text-sm text-sm text-white md:pl-5 lg:pl-3">
                                 {item.title}
                               </h4>
                             </div>
                           </Link>
-
-                          <hr className="bg-white w-32 absolute top-[88%] left-[5%]  " />
-
-                          <li className="mt-auto absolute  top-[88%] left-[6%]">
-                            <h4
-                              className="group flex items-center cursor-pointer -mx-2 flex gap-x-2 rounded-md p-3 text-sm font-semibold leading-6 text-white  hover:text-white"
-                              onClick={LogoutUser}
-                            >
-                              <LogoutLogo />
-                              Log out
-                            </h4>
-                          </li>
                         </li>
                       ))}
                     </ul>
+                  </li>
+                  <li className="mt-auto absolute top-[88%] left-[6%]">
+                    <hr className="w-32 h-[2px] mt-5 -mx-2" />
+                    <h4
+                      className="group flex items-center cursor-pointer -mx-2 flex gap-x-2 rounded-md p-3 text-sm font-semibold leading-6 text-white hover:text-white"
+                      onClick={LogoutUser}
+                    >
+                      <LogoutLogo />
+                      Log out
+                    </h4>
                   </li>
                 </ul>
               </nav>
@@ -321,7 +290,7 @@ export default function Dashboard({ userRole }) {
           </div>
 
           {/* main div right bar + Navbar */}
-          <div className="w-full  bg-[#F9F9F9]">
+          <div className="w-full  ">
             {/* sticky navbar position */}
             <div className="top-0 z-40 flex h-16 shrink-0 items-center ">
               {/* gap-x-4  px-4  sm:gap-x-6 sm:px-6 lg:px-8 */}
@@ -370,45 +339,16 @@ export default function Dashboard({ userRole }) {
                         >
                           {/* userName */}
 
-                          {userdata ? userdata.user.email : "Awais Ali Khan"}
-                          {/* Awais Ali Khan */}
+                          {"Awais Ali Khan"}
                         </span>
-                        {/* <ChevronDownIcon className="ml-2 mt-5 h-5 w-5 text-gray-400" aria-hidden="true" /> */}
                       </span>
                     </Menu.Button>
-                    {/* <Transition
-                    as={Fragment}
-                    enter="transition ease-out duration-100"
-                    enterFrom="transform opacity-0 scale-95"
-                    enterTo="transform opacity-100 scale-100"
-                    leave="transition ease-in duration-75"
-                    leaveFrom="transform opacity-100 scale-100"
-                    leaveTo="transform opacity-0 scale-95"
-                  >
-                    <Menu.Items className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
-                      {userNavigation.map((item) => (
-                        <Menu.Item key={item.name}>
-                          {({ active }) => (
-                            <a
-                              href={item.href}
-                              className={classNames(
-                                active ? 'bg-gray-50' : '',
-                                'block px-3 py-1 text-sm leading-6 text-gray-900'
-                              )}
-                            >
-                              {item.name}
-                            </a>
-                          )}
-                        </Menu.Item>
-                      ))}
-                    </Menu.Items>
-                  </Transition> */}
                   </Menu>
                 </div>
               </div>
             </div>
 
-            <main className=" md:w-full sm:w-full overflow-y-auto bg-[#F9F9F9]">
+            <main className=" md:w-full sm:w-full overflow-y-auto ">
               <div className="p-2">
                 <Outlet />
               </div>

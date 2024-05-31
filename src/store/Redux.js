@@ -14,9 +14,9 @@ const userSlice = createSlice({
     logoutUser: (state) => {
       state.user = null;
     },
-    fetchProfile:(state,action)=>{
-      state.profile = action.payload
-    }
+    fetchProfile: (state, action) => {
+      state.profile = action.payload;
+    },
   },
 });
 

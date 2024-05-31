@@ -3,26 +3,26 @@ import axiosInstance from "../../utils/apiCalls/axiosInstance";
 // import { fetchProfile } from "../redux/userSlice";
 
 const accessTokenCheckExistence = () => {
-    const access_token = window.localStorage.getItem('access_token')
+  const access_token = window.localStorage.getItem("access_token");
 
-    if (access_token === null) {
-        window.localStorage.setItem('refresh_token', null)
-        return false
-    }
-    return true
-}
+  if (access_token === null) {
+    window.localStorage.setItem("refresh_token", null);
+    return false;
+  }
+  return true;
+};
 
 export const isGuest = async function (userProfileContext, dispatch) {
   if (accessTokenCheckExistence()) {
-      return await axiosInstance()
-          .get(get_profile())
-          .then(response => false)
-          .catch(err => true)
+    return await axiosInstance()
+      .get(get_profile())
+      .then((response) => false)
+      .catch((err) => true);
   }
-  return true
-}
+  return true;
+};
 
-const validContext = Context => {
+const validContext = (Context) => {
   const { profile, isFetching } = Context;
 
   return profile && !isFetching;
@@ -30,7 +30,7 @@ const validContext = Context => {
 
 export const isAuthenticated = async function (userProfileContext, dispatch) {
   if (validContext(userProfileContext)) {
-      return true;
+    return true;
   } else {
     if (accessTokenCheckExistence()) {
       return true;
@@ -38,7 +38,6 @@ export const isAuthenticated = async function (userProfileContext, dispatch) {
     return false;
   }
 };
-
 
 export const authConditions = {
   "/signin": isAuthenticated,

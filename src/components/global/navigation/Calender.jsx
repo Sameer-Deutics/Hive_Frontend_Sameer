@@ -1,12 +1,5 @@
-import { Fragment, useState, useEffect } from "react";
-import {
-  ChevronDownIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ClockIcon,
-  EllipsisHorizontalIcon,
-} from "@heroicons/react/20/solid";
-import { Menu, Transition } from "@headlessui/react";
+import { useState, useEffect } from "react";
+
 import CalenderDots from "../../../assets/svgs/CalenderDotsSvg";
 import CalenderThreeDots from "../../../assets/svgs/CalenderDotsSvg";
 
@@ -103,9 +96,9 @@ export default function Calendar() {
           <div className="lg:flex lg:flex-auto lg:flex-col">
             <div className="grid grid-cols-7 rounded-[50px] bg-[#CCF0FD] text-center text-xs font-semibold leading-6 text-gray-700 lg:flex-none">
               {/* Days of the week */}
-              {["M", "T", "W", "T", "F", "S", "S"].map((day) => (
+              {["M", "T", "W", "T", "F", "S", "S"].map((day, dayIndex) => (
                 <div
-                  key={day}
+                  key={`${day}-${dayIndex}`}
                   className="bg-[#CCF0FD] text-black py-2 rounded-[50px]"
                 >
                   {day}
@@ -115,7 +108,7 @@ export default function Calendar() {
 
             {/* Days */}
             <div className="flex bg-gray-200 text-xs leading-6 text-gray-700 lg:flex-auto">
-              <div className="hidden w-full lg:grid lg:grid-cols-7 lg:grid-rows-6 lg:gap-px">
+              <div className="w-full grid grid-cols-7 grid-rows-6 gap-px">
                 {/* Render days for the current month */}
                 {getDaysForMonth(2024, index + 1).map((day) => (
                   <div

@@ -10,8 +10,7 @@ function App() {
       {/* <Routers/> */}
 
       <BrowserRouter>
-      <RoutesIndex />
-      
+        <RoutesIndex />
       </BrowserRouter>
       {/* <Dash/> */}
     </>

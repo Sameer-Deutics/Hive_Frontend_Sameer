@@ -99,47 +99,45 @@ const DashboardFilters = ({ setFilters }) => {
   };
 
   return (
-    <div className="flex flex-wrap -mx-2 md:w-full sm:w-full w-full items-center lg:flex-row md:flex-row sm:flex-col flex-col">
-      <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-2 gap-2 w-full">
-        <div className="grid grid-cols-2 sm:flex sm:gap-3 gap-4 w-[80vw] sm:w-[50vw]">
-          <form className="max-w-sm mx-auto">
-            <Select
-              value={selectedRegion}
-              onChange={handleChangeRegion}
-              options={optionsRegion}
-              isSearchable={false}
-              placeholder="Region"
-              styles={customStyles}
-            />
-          </form>
-          <form className="max-w-sm mx-auto">
-            <Select
-              value={selectedCity}
-              onChange={handleChangeCity}
-              options={optionsCity}
-              isSearchable={false}
-              placeholder="City"
-              styles={customStyles}
-            />
-          </form>
-          <form className="max-w-sm mx-auto">
-            <Select
-              value={selectedCampus}
-              onChange={handleChangeCampus}
-              options={optionsCampus}
-              isSearchable={false}
-              placeholder="Campus"
-              styles={customStyles}
-            />
-          </form>
-          <button
-            type="button"
-            onClick={fetchData}
-            className="bg-[#08A5DE] text-white py-0 rounded-[50px] px-10 sm:w-40 w-32 mx-auto text-xs w-42"
-          >
-            Show Results
-          </button>
-        </div>
+    <div className="flex flex-wrap items-center">
+      <div className="grid grid-cols-2 gap-6 sm:flex sm:flex-wrap">
+        <form className="max-w-xs">
+          <Select
+            value={selectedRegion}
+            onChange={handleChangeRegion}
+            options={optionsRegion}
+            isSearchable={false}
+            placeholder="Region"
+            styles={customStyles}
+          />
+        </form>
+        <form className="max-w-xs">
+          <Select
+            value={selectedCity}
+            onChange={handleChangeCity}
+            options={optionsCity}
+            isSearchable={false}
+            placeholder="City"
+            styles={customStyles}
+          />
+        </form>
+        <form className="max-w-xs">
+          <Select
+            value={selectedCampus}
+            onChange={handleChangeCampus}
+            options={optionsCampus}
+            isSearchable={false}
+            placeholder="Campus"
+            styles={customStyles}
+          />
+        </form>
+        <button
+          type="button"
+          onClick={fetchData}
+          className="bg-[#08A5DE] text-white py-1 rounded-[50px] px-6 sm:w-auto w-full mx-auto text-xs"
+        >
+          Show Results
+        </button>
       </div>
     </div>
   );

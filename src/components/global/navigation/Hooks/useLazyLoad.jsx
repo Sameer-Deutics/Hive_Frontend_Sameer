@@ -9,7 +9,7 @@ const reducer = (state, action) => {
     case "set": {
       return {
         ...state,
-        ...action.payload
+        ...action.payload,
       };
     }
     case "onGrabData": {
@@ -17,7 +17,7 @@ const reducer = (state, action) => {
         ...state,
         loading: false,
         data: [...state.data, ...action.payload.data],
-        currentPage: state.currentPage + 1
+        currentPage: state.currentPage + 1,
       };
     }
     default:
@@ -29,7 +29,7 @@ const useLazyLoad = ({ triggerRef, onGrabData, options }) => {
   const [state, dispatch] = useReducer(reducer, {
     loading: false,
     currentPage: 1,
-    data: []
+    data: [],
   });
 
   const _handleEntry = async (entry) => {
