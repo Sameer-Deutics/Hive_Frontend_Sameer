@@ -1,39 +1,16 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import moment from "moment";
-import clsx from "clsx";
 import { LoadingPosts } from "./LoadingPosts";
 
-const DashboardEvents = ({ events, setPage, loading }) => {
+const DashboardEvents = ({ events, setPage, loading, hasMoreEvents }) => {
   const [activeButton, setActiveButton] = useState(0);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const containerRef = useRef(null);
 
-  const handleButtonClick = (index) => {
-    setActiveButton(index);
-  };
-
-  const handleScroll = () => {
-    if (containerRef.current) {
-      const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
-      if (scrollTop + clientHeight >= scrollHeight - 5) {
-        setPage((prevPage) => prevPage + 1);
-      }
-    }
-  };
-
-  useEffect(() => {
-    const container = containerRef.current;
-    if (container) {
-      container.addEventListener("scroll", handleScroll);
-    }
-    return () => {
-      if (container) {
-        container.removeEventListener("scroll", handleScroll);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
+  let filteredData = () => {
+    const formattedDate = events.map((each) => {
+      return moment(each.date).format("MMMM DO YYYY");
+    });
     const filteredEvents =
       activeButton === 0
         ? events.filter((event) =>
@@ -70,6 +47,10 @@ const DashboardEvents = ({ events, setPage, loading }) => {
     });
 
     setFilteredEvents(filteredEvents);
+  };
+
+  useEffect(() => {
+    filteredData();
   }, [activeButton, events]);
 
   useEffect(() => {
@@ -79,6 +60,23 @@ const DashboardEvents = ({ events, setPage, loading }) => {
       setActiveButton(1);
     }
   }, [events, filteredEvents]);
+
+  const handleButtonClick = (index) => {
+    setActiveButton(index);
+  };
+
+  // handle scrolling
+  const handleScroll = () => {
+    if (hasMoreEvents && containerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
+      const bottomOffset = scrollHeight - (scrollTop + clientHeight);
+      if (bottomOffset < 100) {
+        // Trigger setPage to fetch more events
+        setPage((prevPage) => prevPage + 1);
+      }
+    }
+  };
+
   return (
     <div className="bg-[#F9F9F9] rounded-xl p-2">
       <div className="mx-auto max-w-7xl pt-2">
@@ -94,7 +92,7 @@ const DashboardEvents = ({ events, setPage, loading }) => {
                 activeButton === 0 ? "text-white" : "text-black"
               } w-24 ${
                 events.length === 0 && activeButton === 0
-                  ? "bg-red-300 w-48"
+                  ? "bg-[#08A5DE] w-48"
                   : activeButton === 0
                   ? "bg-[#08A5DE]"
                   : "bg-white"
@@ -102,7 +100,7 @@ const DashboardEvents = ({ events, setPage, loading }) => {
               onClick={() => handleButtonClick(0)}
             >
               {events.length === 0 && activeButton === 0
-                ? "Active (No Data)"
+                ? "Active (no data)"
                 : "Active"}
             </button>
             <button
@@ -126,48 +124,72 @@ const DashboardEvents = ({ events, setPage, loading }) => {
 
         <div
           ref={containerRef}
-          className="mx-auto overflow-y-auto lg:h-[48vh] md:h-[40vh] h-[200px] example scrollbar"
+          onScroll={handleScroll}
+          className="mx-auto overflow-y-auto lg:h-[55vh] md:h-[50vh] sm:h-[45vh] h-[40vh] example scrollbar"
         >
-          {filteredEvents.map((value, index) => (
-            <div key={index}>
-              <div className="grid grid-cols-2 px-6 pt-3">
-                <div>
-                  <h2 className="text-base font-medium text-black">
-                    {value.name}
-                  </h2>
-                  <h2 className="text-sm font-light text-black">
-                    {moment(value.date).format("MMMM Do YYYY, h a")}
-                  </h2>
-                </div>
-                <div className="rounded-2xl flex place-items-center justify-end">
-                  <button className="border border-[#08A5DE] pt-0.1 pb-1 rounded-2xl text-[#08A5DE] w-[110px]">
-                    {activeButton === 0 ? "Active" : "Upcoming"}
-                  </button>
-                </div>
-              </div>
+          {events.map((value, index) => {
+            const attendingStudents = value.attending_students || 0;
+            const nonAttendingStudents = value.non_attending_students || 0;
+            const skepticalStudents = value.skeptical_students || 0;
+            const totalStudents =
+              attendingStudents + nonAttendingStudents + skepticalStudents;
 
-              <div className="grid grid-cols-3 place-items-center justify-between pt-5 border-b-2 pb-3">
-                <div>
-                  <button className="border border-[#08A5DE] text-black bg-[#CCF0FD] text-center lg:px-9 md:px-5 sm:px-10 px-7 py-1.5 text-semibold rounded-xl pb-2">
-                    50%
-                  </button>
-                  <h2 className="text-center text-sm pt-1">Attending</h2>
+            const attendingPercentage =
+              totalStudents > 0
+                ? ((attendingStudents / totalStudents) * 100).toFixed(1)
+                : "0";
+            const nonAttendingPercentage =
+              totalStudents > 0
+                ? ((nonAttendingStudents / totalStudents) * 100).toFixed(1)
+                : "0";
+            const skepticalPercentage =
+              totalStudents > 0
+                ? ((skepticalStudents / totalStudents) * 100).toFixed(1)
+                : "0";
+
+            return (
+              <div key={index}>
+                <div className="grid grid-cols-2 px-6 pt-3">
+                  <div>
+                    <h2 className="text-base font-medium text-black">
+                      {value.name}
+                      {value.id.toString()}
+                    </h2>
+                    <h2 className="text-sm font-light text-black">
+                      {moment(value.date).format("MMMM Do YYYY, h a")}
+                    </h2>
+                  </div>
+                  <div className="rounded-2xl flex place-items-center justify-end">
+                    <button className="border border-[#08A5DE] pt-0.1 pb-1 rounded-2xl text-[#08A5DE] w-[110px]">
+                      {activeButton === 0 ? "Active" : "Upcoming"}
+                    </button>
+                  </div>
                 </div>
-                <div>
-                  <button className="border border-[#A2C73B] text-black bg-[#E9FAB9] text-center lg:px-9 md:px-5 sm:px-10 px-7 py-1.5 text-semibold rounded-xl pb-2">
-                    60%
-                  </button>
-                  <h2 className="text-center text-sm pt-1">Maybe</h2>
-                </div>
-                <div>
-                  <button className="border border-[#F29200] text-black bg-[#FFDCA8] text-center lg:px-9 md:px-5 sm:px-10 px-7 py-1.5 text-semibold rounded-xl pb-2">
-                    70%
-                  </button>
-                  <h2 className="text-center text-sm pt-1">Undecided</h2>
+
+                <div className="grid grid-cols-3 place-items-center justify-between pt-5 border-b-2 pb-3">
+                  <div>
+                    <button className="border border-[#08A5DE] text-black bg-[#CCF0FD] text-center lg:px-9 md:px-5 sm:px-10 px-7 py-1.5 text-semibold rounded-xl pb-2">
+                      {attendingPercentage}%
+                    </button>
+                    <h2 className="text-center text-sm pt-1">Attending</h2>
+                  </div>
+                  <div>
+                    <button className="border border-[#A2C73B] text-black bg-[#E9FAB9] text-center lg:px-9 md:px-5 sm:px-10 px-7 py-1.5 text-semibold rounded-xl pb-2">
+                      {nonAttendingPercentage}%
+                    </button>
+                    <h2 className="text-center text-sm pt-1">Maybe</h2>
+                  </div>
+                  <div>
+                    <button className="border border-[#F29200] text-black bg-[#FFDCA8] text-center lg:px-9 md:px-5 sm:px-10 px-7 py-1.5 text-semibold rounded-xl pb-2">
+                      {skepticalPercentage}%
+                    </button>
+                    <h2 className="text-center text-sm pt-1">Undecided</h2>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
+          {/* loading */}
           {loading && <LoadingPosts />}
         </div>
       </div>

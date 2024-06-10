@@ -15,6 +15,7 @@ import ReportsLogo from "../../../assets/svgs/ReportsLogo";
 import LogoutLogo from "../../../assets/svgs/LogoutLogo";
 import LogoutMobile from "../../../assets/svgs/LogoutLogo";
 import { logoutUser } from "../../../store/Redux";
+import ReportsSidebar from "../../reports/ReportsSidebar";
 
 const userNavigation = [
   { name: "Your profile", href: "/" },
@@ -28,11 +29,11 @@ function classNames(...classes) {
 export default function Dashboard({ userRole }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [flagMenu, setFlagMenu] = useState(false);
-  const [userRoles, setUserRoles] = useState("");
-  const [userName, setUserName] = useState("");
-  const [data, setData] = useState([]);
+  const [reportsSidebar, setReportsSidebar] = useState(false);
 
-  const [selectedItem, setSelectedItem] = useState("");
+  const [selectedItem, setSelectedItem] = useState(
+    sessionStorage.getItem("selectedItem") || "/"
+  );
 
   const dispatch = useDispatch();
 
@@ -50,7 +51,10 @@ export default function Dashboard({ userRole }) {
 
   // On selectedItem change, update localStorage
   useEffect(() => {
-    sessionStorage.setItem("selectedItem", selectedItem) || 0;
+    const store = sessionStorage.setItem("selectedItem", selectedItem) || "/";
+    if (!isNaN(store)) {
+      setSelectedItem();
+    }
   }, [selectedItem]);
 
   const navigate = useNavigate();
@@ -103,6 +107,11 @@ export default function Dashboard({ userRole }) {
   // Function to handle item click
   const handleItemClick = (link) => {
     setSelectedItem(link);
+    if (link === "reports") {
+      setReportsSidebar(!reportsSidebar);
+    } else {
+      setReportsSidebar(false);
+    }
     localStorage.setItem("link", link);
   };
 
@@ -232,8 +241,9 @@ export default function Dashboard({ userRole }) {
           {/* lg:inset-y-0 */}
           {/*  */}
           {/*  */}
-          <div className="hidden  md:inset-y-0 lg:w-[30vw] h-full md:z-50 md:flex md:w-80 md:flex-col lg:z-50 lg:flex md:w-96 md:h-[100vh] lg:flex-col ">
-            <div className="flex grow flex-col gap-y-5 overflow-y-auto  px-6 pb-4 ">
+          <div className="hidden  md:inset-y-0 lg:w-[29vw] md:w-[35vw] h-full md:z-50 md:flex md:w-80 md:flex-col lg:z-50 lg:flex md:w-96 md:h-[100vh] lg:flex-col ">
+            <div className="flex grow flex-col gap-y-5   pl-6 pb-4 ">
+              {/* px-6 */}
               <div className="flex h-16 shrink-0  ">
                 <img
                   className="h-16 w-auto  mt-2 "
@@ -244,7 +254,7 @@ export default function Dashboard({ userRole }) {
               <nav className="flex flex-1 flex-col h-full">
                 <ul
                   role="list"
-                  className="flex flex-1 flex-col gap-y-7 pt-4 rounded-l-lg bg-gradient-to-r from-[#08A5DE] to-[#00739C] h-full"
+                  className="flex flex-1 flex-col gap-y-7 pt-4 rounded-l-2xl bg-gradient-to-r from-[#08A5DE] to-[#00739C] h-full"
                 >
                   <li className="flex justify-start">
                     <ul role="list" className="-mx-2 space-y-1">
@@ -262,7 +272,7 @@ export default function Dashboard({ userRole }) {
                               }`}
                               onClick={() => handleItemClick(item.link)}
                             >
-                              <div className="h-[24px] w-[24px] text-black md:pl-6 lg:pl-4">
+                              <div className="h-[24px] w-[24px] text-black pt-[2px] md:pl-6 lg:pl-4">
                                 {item.logo}
                               </div>
                               <h4 className="lg:text-lg md:text-md sm:text-sm text-sm text-white md:pl-5 lg:pl-3">
@@ -275,7 +285,7 @@ export default function Dashboard({ userRole }) {
                     </ul>
                   </li>
                   <li className="mt-auto absolute top-[88%] left-[6%]">
-                    <hr className="w-32 h-[2px] mt-5 -mx-2" />
+                    <hr className="w-32 h-[2px] mt-3 -mx-2" />
                     <h4
                       className="group flex items-center cursor-pointer -mx-2 flex gap-x-2 rounded-md p-3 text-sm font-semibold leading-6 text-white hover:text-white"
                       onClick={LogoutUser}
@@ -288,6 +298,11 @@ export default function Dashboard({ userRole }) {
               </nav>
             </div>
           </div>
+
+          {/*  reports sidebar*/}
+          {reportsSidebar && (
+            <ReportsSidebar dataSide={dataSide} selectedItem={selectedItem} />
+          )}
 
           {/* main div right bar + Navbar */}
           <div className="w-full  ">
@@ -313,10 +328,11 @@ export default function Dashboard({ userRole }) {
 
               <div className="flex flex-1 justify-between self-stretch lg:gap-x-6">
                 <div className="flex items-center text-xl">
-                  <span className="text-black cursor-pointer lg:pt-5 pl-2  lg:text-xl md:text-xl sm:text-xl text-lg ">
+                  <span className="text-black cursor-pointer lg:pt-5 md:pt-5 pl-2 lg:font-semibold   lg:text-xl md:text-xl md:font-semibold sm:font-semibold font-semibold  sm:text-xl text-lg ">
                     {selectedItem === ""
-                      ? "Dashboard"
-                      : dataSide.find((item) => item.link === selectedItem)
+                      ? !reportsSidebar && "Dashboard"
+                      : !reportsSidebar &&
+                        dataSide.find((item) => item.link === selectedItem)
                           ?.title}
                   </span>
                 </div>

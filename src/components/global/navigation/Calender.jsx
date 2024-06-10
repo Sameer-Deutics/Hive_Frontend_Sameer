@@ -61,7 +61,7 @@ export default function Calendar() {
   }, [currentMonth]);
 
   return (
-    <div className="bg-white rounded-xl mx-auto max-w-7xl h-[300px] p-2 overflow-y-auto scrollbar example calendar-container">
+    <div className="bg-white rounded-xl mx-auto max-w-7xl h-[400px] p-2 overflow-y-auto scrollbar example calendar-container">
       {/* Render calendars for each month */}
       {months.map((month, index) => (
         <div key={month} className="mb-8">

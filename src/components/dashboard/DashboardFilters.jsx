@@ -1,10 +1,31 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Select from "react-select";
+import axiosInstance from "../../utils/apiCalls/axiosInstance";
 
 const DashboardFilters = ({ setFilters }) => {
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [selectedCity, setSelectedCity] = useState(null);
   const [selectedCampus, setSelectedCampus] = useState(null);
+
+  const [region, setRegion] = useState([]);
+
+  useEffect(() => {
+    const fetchRegions = async () => {
+      try {
+        const access_token = localStorage.getItem("access_token");
+        const response = await axiosInstance(access_token).get(
+          "/utils/query/region/"
+        );
+        setRegion(response.data.results);
+      } catch (error) {
+        console.error("Error fetching regions:", error);
+      }
+    };
+
+    fetchRegions();
+  }, []);
+
+  // console.log(region, "region");
 
   const regionData = [
     { id: 1, title: "North" },
@@ -27,9 +48,9 @@ const DashboardFilters = ({ setFilters }) => {
     { id: 4, title: "Germany" },
   ];
 
-  const optionsRegion = regionData.map((region) => ({
-    value: region.id,
-    label: region.title,
+  const optionsRegion = region.map((region) => ({
+    value: region?.region_id,
+    label: region?.region_name,
   }));
   const optionsCity = cityData.map((city) => ({
     value: city.id,
@@ -43,6 +64,10 @@ const DashboardFilters = ({ setFilters }) => {
   const handleChangeRegion = (selectedOption) => {
     setSelectedRegion(selectedOption);
   };
+
+  // const handleChangeRegion = (selectedOption) => {
+  //   setSelectedRegion(selectedOption);
+  // };
 
   const handleChangeCity = (selectedOption) => {
     setSelectedCity(selectedOption);
@@ -61,7 +86,7 @@ const DashboardFilters = ({ setFilters }) => {
       ...provided,
       width: "100%",
       maxWidth: "9rem", // lg:w-36
-      minWidth: "8rem", // md:w-28
+      minWidth: "9rem", // md:w-28
       padding: "", // p-2.5
       fontSize: "0.75rem", // text-xs
       borderRadius: "1.875rem", // rounded-3xl
